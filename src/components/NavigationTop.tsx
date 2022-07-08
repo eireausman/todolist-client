@@ -1,15 +1,54 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import Nav from "react-bootstrap/Nav";
+import CreateAccountModal from "./CreateAccountModal";
 
-const NavigationTop = () => {
+import LoginModal from "./LoginModal";
+
+const NavigationTop: React.FC = () => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const handleCloseLogin = () => setShowLoginModal(false);
+  const handleLoginShow = () => setShowLoginModal(true);
+  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
+  const handleCloseCreateAccountModal = () => setShowCreateAccountModal(false);
+  const handleCreateAccountShowModal = () => setShowCreateAccountModal(true);
+  const [activeMenuTab, setActiveMenuTab] = useState<string>(
+    window.location.pathname
+  );
+
   return (
-    <div data-testid="top-nav-container">
-      <Link to="/todos">To Dos</Link>
-      ||
-      <Link to="/todos/new-todo-item">New To Do</Link>
-      ||
-      <Link to="/login">Login</Link>
-    </div>
+    <Nav variant="tabs" activeKey={activeMenuTab}>
+      <Nav.Item>
+        <Nav.Link href="/todos">Your Tasks</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link href="/todos/new-todo-item">New Task</Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link
+          eventKey="/createaccount"
+          onClick={handleCreateAccountShowModal}
+        >
+          Create Account
+        </Nav.Link>
+      </Nav.Item>
+      <Nav.Item>
+        <Nav.Link eventKey="/login" onClick={handleLoginShow}>
+          login
+        </Nav.Link>
+      </Nav.Item>
+      {showLoginModal && (
+        <LoginModal
+          showLoginModal={showLoginModal}
+          handleCloseLogin={handleCloseLogin}
+        />
+      )}
+      {showCreateAccountModal && (
+        <CreateAccountModal
+          showCreateAccountModal={showCreateAccountModal}
+          handleCloseCreateAccountModal={handleCloseCreateAccountModal}
+        />
+      )}
+    </Nav>
   );
 };
 

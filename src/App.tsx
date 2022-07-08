@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import NavigationTop from "./components/NavigationTop";
 import ToDoLists from "./components/ToDoLists";
 import NewToDo from "./components/NewToDo";
-import Login from "./components/Login";
 
 const App: React.FC = () => {
   return (
@@ -14,7 +14,6 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/todos" element={<ToDoLists />} />
           <Route path="/todos/new-todo-item" element={<NewToDo />} />
-          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </div>

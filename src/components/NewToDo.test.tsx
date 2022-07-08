@@ -18,7 +18,7 @@ describe("Empty form renders correctly", () => {
       render(<NewToDo />);
     });
     expect(screen.getByTitle("addDueDate")).toBeInTheDocument();
-    userEvent.click(screen.getByTitle("addDueDate")); // Increment 1
+    userEvent.click(screen.getByTitle("addDueDate"));
     expect(screen.getByTitle("dueDate")).toBeInTheDocument();
   });
 });
