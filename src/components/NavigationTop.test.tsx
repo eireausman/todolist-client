@@ -7,11 +7,16 @@ import { BrowserRouter } from "react-router-dom";
 
 describe("All Product Page Test", () => {
   const [activeMenuTab, setActiveMenuTab] = useState<string>("/todos");
+  const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
+
   it("Naviation container renders", () => {
     act(() => {
       render(
         <BrowserRouter>
-          <NavigationTop />
+          <NavigationTop
+            userIsLoggedIn={userIsLoggedIn}
+            setuserIsLoggedIn={setuserIsLoggedIn}
+          />
         </BrowserRouter>
       );
     });

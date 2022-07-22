@@ -1,54 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import CreateAccountModal from "./CreateAccountModal";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import { Container } from "react-bootstrap";
 
-import LoginModal from "./LoginModal";
+interface NavigationTopProps {
+  userIsLoggedIn: boolean;
+  setuserIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const NavigationTop: React.FC = () => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const handleCloseLogin = () => setShowLoginModal(false);
-  const handleLoginShow = () => setShowLoginModal(true);
-  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
-  const handleCloseCreateAccountModal = () => setShowCreateAccountModal(false);
-  const handleCreateAccountShowModal = () => setShowCreateAccountModal(true);
+const NavigationTop: React.FC<NavigationTopProps> = ({
+  userIsLoggedIn,
+  setuserIsLoggedIn,
+}) => {
   const [activeMenuTab, setActiveMenuTab] = useState<string>(
     window.location.pathname
   );
 
   return (
-    <Nav variant="tabs" activeKey={activeMenuTab}>
-      <Nav.Item>
-        <Nav.Link href="/todos">Your Tasks</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link href="/todos/new-todo-item">New Task</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link
-          eventKey="/createaccount"
-          onClick={handleCreateAccountShowModal}
-        >
-          Create Account
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="/login" onClick={handleLoginShow}>
-          login
-        </Nav.Link>
-      </Nav.Item>
-      {showLoginModal && (
-        <LoginModal
-          showLoginModal={showLoginModal}
-          handleCloseLogin={handleCloseLogin}
-        />
-      )}
-      {showCreateAccountModal && (
-        <CreateAccountModal
-          showCreateAccountModal={showCreateAccountModal}
-          handleCloseCreateAccountModal={handleCloseCreateAccountModal}
-        />
-      )}
-    </Nav>
+    <Navbar bg="dark" variant="dark" expand="sm">
+      <Container>
+        <Navbar.Brand href="/todos">To Do List</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse className="justify-content-start">
+          <Nav variant="pills" activeKey={activeMenuTab}>
+            <Nav.Item>
+              <Nav.Link href="/todos">Your Tasks</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/todos/new-todo-item">New Task</Nav.Link>
+            </Nav.Item>
+            {userIsLoggedIn !== true ? (
+              <NavDropdown title="Account" id="basic-nav-dropdown">
+                <NavDropdown.Item href="/createaccount">
+                  Create Account
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/login">Login</NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <NavDropdown title="Account" id="basic-nav-dropdown">
+                <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
+              </NavDropdown>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
