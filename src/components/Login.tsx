@@ -76,6 +76,10 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
     <div className="appContainer">
       <section className="genericFormContainer">
         <Form onSubmit={submitFormData}>
+          <Form.Group className="mb-3">LOGIN</Form.Group>
+          <Form.Group className="mb-3">
+            Test Account Username and Password: 12345678
+          </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -89,7 +93,6 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Group className="mb-3">12345678</Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
               required
@@ -100,9 +103,10 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
               placeholder="Password"
             />
           </Form.Group>
-          <Button variant="primary" className="mb-3" type="submit">
+          <button type="submit" className="genericSiteButton">
             Submit
-          </Button>
+          </button>
+
           {showResponseMessage && !formSubmitResponse.message?.loginOutcome && (
             <Alert variant="danger" className="mb-3">
               Error with credentials. Please try again.

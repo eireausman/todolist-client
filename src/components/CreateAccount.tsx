@@ -39,7 +39,7 @@ const CreateAccount: React.FC = () => {
       });
     };
     checkLoginState();
-  }, []);
+  }, [navigate]);
 
   const updateFormDataState = (e: React.FormEvent<EventTarget>) => {
     const formDataCopy: FormData = { ...formData };
@@ -92,9 +92,9 @@ const CreateAccount: React.FC = () => {
               placeholder="Password (required)"
             />
           </Form.Group>
-          <Button variant="primary" type="submit" className="mb-3">
+          <button type="submit" className="genericSiteButton">
             Submit
-          </Button>
+          </button>
           {showResponseMessage && !formSubmitResponse.requestOutcome && (
             <Alert variant="danger">{formSubmitResponse.message}</Alert>
           )}

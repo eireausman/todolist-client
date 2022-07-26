@@ -2,33 +2,24 @@ import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import Axios from "axios";
 import { postNewToDoItem } from "../modules/serverRequests";
-
-interface FormData {
-  [key: string]: string | number | undefined;
-  dueDate?: number;
-  title?: string;
-  detail?: string;
-}
-
-interface serverResponse {
-  Outcome?: boolean;
-}
+import {
+  NewToDoFormData,
+  NewToDoFormSubmissionServerResponse,
+} from "../typeInterfaces/typeInterfaces";
 
 const NewToDo: React.FC = () => {
   const [showDueDate, setShowDueDate] = useState<boolean>(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<NewToDoFormData>({
     dueDate: 0,
     title: "",
     detail: "",
   });
-  const [formSubmitResponse, setFormSubmitResponse] = useState<serverResponse>(
-    {}
-  );
+  const [formSubmitResponse, setFormSubmitResponse] =
+    useState<NewToDoFormSubmissionServerResponse>({});
 
   const updateFormDataState = (e: React.FormEvent<EventTarget>) => {
-    const formDataCopy: FormData = { ...formData };
+    const formDataCopy: NewToDoFormData = { ...formData };
     const target = e.target as HTMLInputElement;
     const fieldName =
       target.getAttribute("name") ??
@@ -94,18 +85,19 @@ const NewToDo: React.FC = () => {
             </Form.Group>
           ) : (
             <Form.Group className="mb-3">
-              <Button
+              <button
                 title="addDueDate"
                 onClick={() => setShowDueDate(!showDueDate)}
+                className="genericSiteButton"
               >
                 Add Due Date
-              </Button>
+              </button>
             </Form.Group>
           )}
 
-          <Button variant="primary" type="submit" className="mb-3">
+          <button type="submit" className="genericSiteButton">
             Submit
-          </Button>
+          </button>
           {formSubmitResponse === true && (
             <Alert variant="success" className="mb-3">
               Your task has been saved.

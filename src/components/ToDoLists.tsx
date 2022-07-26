@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Card from "react-bootstrap/Card";
 import { getToDos } from "../modules/serverRequests";
-import MustLoginToUse from "./MustLoginToUse";
-
-interface databaseData {
-  _id: number;
-  title: string;
-  detail: string;
-  dueDate: number;
-  dueDate_formatted: string;
-}
+import Spinner from "react-bootstrap/Spinner";
+import Button from "react-bootstrap/Button";
+import EditToDoModal from "./EditToDoModal";
+import {
+  EditItemInterface,
+  ToDoListsDatabaseData,
+} from "../typeInterfaces/typeInterfaces";
 
 interface ToDoListsProps {
   userIsLoggedIn: boolean;
@@ -20,36 +17,83 @@ const ToDoLists: React.FC<ToDoListsProps> = ({
   userIsLoggedIn,
   setuserIsLoggedIn,
 }) => {
-  const [data, setData] = useState<Array<databaseData>>([]);
+  const [toDosFromDatabase, setToDosFromDatabase] = useState<
+    Array<ToDoListsDatabaseData>
+  >([]);
+  const [showSpinner, setShowSpinner] = useState<boolean>(true);
+  const [editItem, setEditItem] = useState<EditItemInterface>({});
+  const [editModalBeingShown, seteditModalBeingShown] =
+    useState<boolean>(false);
 
   useEffect(() => {
     getToDos().then((serverResponse) => {
       if (serverResponse.userLoggedIn === true) {
-        setData(serverResponse.list_items);
+        setToDosFromDatabase(serverResponse.list_items);
+        setShowSpinner(false);
         setuserIsLoggedIn(true);
       } else {
         setuserIsLoggedIn(false);
       }
     });
-  }, []);
+  }, [setuserIsLoggedIn]);
+
+  const closeModal = (e: React.FormEvent<EventTarget>) => {
+    const target = e.target as HTMLDivElement;
+    if (target.id !== "editModalContainer") {
+      return;
+    }
+    seteditModalBeingShown(false);
+    setEditItem({});
+  };
+
+  const showEditModal = (cardid: number) => {
+    const item: ToDoListsDatabaseData | undefined = toDosFromDatabase.find(
+      (db_entry) => db_entry._id === cardid
+    );
+    if (item === undefined) {
+      throw new Error("no item found");
+    }
+    seteditModalBeingShown(true);
+    setEditItem(item);
+  };
 
   return (
     <div className="appContainer">
-      <div className="cardsContainer">
-        {data.map((toDoItem) => (
-          <Card style={{ width: "18rem" }} key={toDoItem._id}>
-            <Card.Body>
-              <Card.Title>{toDoItem.title}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                Due: {toDoItem.dueDate_formatted}
-              </Card.Subtitle>
-              <Card.Text>{toDoItem.detail}</Card.Text>
-              <Card.Link href="#">Edit Card</Card.Link>
-              <Card.Link href="#">Delete Card</Card.Link>
-            </Card.Body>
-          </Card>
+      {showSpinner === true && (
+        <Button variant="primary" className="mb-5" disabled>
+          <Spinner
+            as="span"
+            animation="grow"
+            size="sm"
+            role="status"
+            aria-hidden="true"
+          />
+          Loading...
+        </Button>
+      )}
+      <section className="cardsContainer">
+        {toDosFromDatabase.map((toDoItem) => (
+          <div
+            key={toDoItem._id}
+            className="toDoCard"
+            onClick={() => showEditModal(toDoItem._id)}
+          >
+            <div className="cardTitle">{toDoItem.title}</div>
+            <div className="cardDetail">{toDoItem.detail}</div>
+            {toDoItem.dueDate_formatted !== "1 Jan 2000" && (
+              <div className="cardDate">{toDoItem.dueDate_formatted}</div>
+            )}
+          </div>
         ))}
-      </div>
+      </section>
+      <EditToDoModal
+        editItem={editItem}
+        setEditItem={setEditItem}
+        closeModal={closeModal}
+        editModalBeingShown={editModalBeingShown}
+        seteditModalBeingShown={seteditModalBeingShown}
+        setToDosFromDatabase={setToDosFromDatabase}
+      />
     </div>
   );
 };

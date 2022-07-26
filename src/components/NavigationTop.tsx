@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import { Container } from "react-bootstrap";
+import React, { useState, Fragment } from "react";
+import { Link } from "react-router-dom";
 
 interface NavigationTopProps {
   userIsLoggedIn: boolean;
@@ -17,36 +14,92 @@ const NavigationTop: React.FC<NavigationTopProps> = ({
     window.location.pathname
   );
 
+  const updateActiveMenuTab = (e: React.FormEvent<EventTarget>) => {
+    const target = e.target as HTMLInputElement;
+
+    const targetName: string = target.getAttribute("name")!;
+    setActiveMenuTab(targetName);
+  };
+
   return (
-    <Navbar bg="dark" variant="dark" expand="sm">
-      <Container>
-        <Navbar.Brand href="/todos">To Do List</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse className="justify-content-start">
-          <Nav variant="pills" activeKey={activeMenuTab}>
-            <Nav.Item>
-              <Nav.Link href="/todos">Your Tasks</Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link href="/todos/new-todo-item">New Task</Nav.Link>
-            </Nav.Item>
-            {userIsLoggedIn !== true ? (
-              <NavDropdown title="Account" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/createaccount">
-                  Create Account
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-              </NavDropdown>
-            ) : (
-              <NavDropdown title="Account" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/logout">Logout</NavDropdown.Item>
-              </NavDropdown>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <div className="topNavBar">
+      <nav className="topNavBarMenuItems">
+        <h1 className="topNavBarHeading">Your To Do List</h1>
+        <Link to="/todos">
+          <button
+            // className="topNavBarButton"
+            onClick={(e) => updateActiveMenuTab(e)}
+            name="/todos"
+            className={
+              activeMenuTab === "/todos"
+                ? "genericSiteButton activeMenuTab"
+                : "genericSiteButton"
+            }
+          >
+            Your Tasks
+          </button>
+        </Link>
+        <Link to="/todos/new-todo-item">
+          <button
+            onClick={(e) => updateActiveMenuTab(e)}
+            name="/todos/new-todo-item"
+            className={
+              activeMenuTab === "/todos/new-todo-item"
+                ? "genericSiteButton activeMenuTab"
+                : "genericSiteButton"
+            }
+          >
+            New Task
+          </button>
+        </Link>
+      </nav>
+      <div className="topNavBarLoginState">
+        {userIsLoggedIn === true ? (
+          <Link to="/logout">
+            <button
+              className={
+                activeMenuTab === "/login"
+                  ? "genericSiteButton activeMenuTab"
+                  : "genericSiteButton"
+              }
+            >
+              {" "}
+              Logout
+            </button>
+          </Link>
+        ) : (
+          <Fragment>
+            <Link to="/createaccount">
+              <button
+                onClick={(e) => updateActiveMenuTab(e)}
+                name="/createaccount"
+                className={
+                  activeMenuTab === "/createaccount"
+                    ? "genericSiteButton activeMenuTab"
+                    : "genericSiteButton"
+                }
+              >
+                {" "}
+                Create Account
+              </button>
+            </Link>
+            <Link to="/login">
+              <button
+                onClick={(e) => updateActiveMenuTab(e)}
+                name="/login"
+                className={
+                  activeMenuTab === "/login"
+                    ? "genericSiteButton activeMenuTab"
+                    : "genericSiteButton"
+                }
+              >
+                Login
+              </button>
+            </Link>
+          </Fragment>
+        )}
+      </div>
+    </div>
   );
 };
 

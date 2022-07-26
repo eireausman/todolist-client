@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import { Link } from "react-router-dom";
 
@@ -11,11 +11,10 @@ const Logout: React.FC<LogOutProps> = ({
   userIsLoggedIn,
   setuserIsLoggedIn,
 }) => {
-  const [tokenStatus, settokenStatus] = useState<Boolean>(true);
-
   const clearLocalStorageToken = () => {
     try {
       localStorage.clear();
+      setuserIsLoggedIn(false);
     } catch (e) {
       console.log(e);
       return;

@@ -1,4 +1,8 @@
 import axios from "axios";
+import {
+  postNewToDoItemFormData,
+  EditItemInterface,
+} from "../typeInterfaces/typeInterfaces";
 
 const getTokenFromStorage = async () => {
   const token: string | null = localStorage.getItem("token");
@@ -13,18 +17,6 @@ const getTokenFromStorage = async () => {
     };
     return requestConfig;
   }
-};
-
-const userLoginCheck = async () => {
-  const x = getTokenFromStorage().then((headerWithToken) => {
-    const serverRequest = axios
-      .get("/checktokenvalidity", headerWithToken)
-      .then((serverResponse) => {
-        return serverResponse.data;
-      });
-    return serverRequest;
-  });
-  return await x;
 };
 
 const getToDos = async () => {
@@ -67,13 +59,6 @@ const loginAttempt = async (formData: loginAttemptFormData) => {
   return await x;
 };
 
-interface postNewToDoItemFormData {
-  [key: string]: string | number | undefined;
-  dueDate?: number;
-  title?: string;
-  detail?: string;
-}
-
 const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
   const x = getTokenFromStorage().then((headerWithToken) => {
     const serverRequest = axios
@@ -86,4 +71,34 @@ const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
   return await x;
 };
 
-export { userLoginCheck, getToDos, loginAttempt, postNewToDoItem };
+const updateEditedToDoItem = async (formData: EditItemInterface) => {
+  const x = getTokenFromStorage().then((headerWithToken) => {
+    const serverRequest = axios
+      .post("todos/update-edited-todo-item", formData, headerWithToken)
+      .then((serverResponse) => {
+        return serverResponse.data;
+      });
+    return serverRequest;
+  });
+  return await x;
+};
+
+const userLoginCheck = async () => {
+  const x = getTokenFromStorage().then((headerWithToken) => {
+    const serverRequest = axios
+      .get("/checktokenvalidity", headerWithToken)
+      .then((serverResponse) => {
+        return serverResponse.data;
+      });
+    return serverRequest;
+  });
+  return await x;
+};
+
+export {
+  userLoginCheck,
+  getToDos,
+  loginAttempt,
+  postNewToDoItem,
+  updateEditedToDoItem,
+};
