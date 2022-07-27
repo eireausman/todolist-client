@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
@@ -81,26 +80,26 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
             Test Account Username and Password: 12345678
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Username</Form.Label>
+            <Form.Label visuallyHidden>Username</Form.Label>
             <Form.Control
               required
               minLength={3}
               name="username"
               onChange={(e) => updateFormDataState(e)}
               type="text"
-              placeholder="Username"
+              placeholder="Username (required)"
             />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
+            <Form.Label visuallyHidden>Password</Form.Label>
             <Form.Control
               required
               name="password"
               minLength={8}
               onChange={(e) => updateFormDataState(e)}
               type="password"
-              placeholder="Password"
+              placeholder="Password (required)"
             />
           </Form.Group>
           <button type="submit" className="genericSiteButton">

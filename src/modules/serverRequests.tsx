@@ -3,6 +3,7 @@ import {
   postNewToDoItemFormData,
   EditItemInterface,
 } from "../typeInterfaces/typeInterfaces";
+import { BASE_URL } from "../modules/publicEnvVariables";
 
 const getTokenFromStorage = async () => {
   const token: string | null = localStorage.getItem("token");
@@ -22,7 +23,7 @@ const getTokenFromStorage = async () => {
 const getToDos = async () => {
   const x = getTokenFromStorage().then((headerWithToken) => {
     const serverRequest = axios
-      .get("/todos", headerWithToken)
+      .get(BASE_URL + "/todos", headerWithToken)
       .then((serverResponse) => {
         return serverResponse.data;
       });
@@ -38,7 +39,7 @@ interface loginAttemptFormData {
 }
 
 const loginAttempt = async (formData: loginAttemptFormData) => {
-  const x = axios.post("/login", formData).then((response) => {
+  const x = axios.post(BASE_URL + "/login", formData).then((response) => {
     console.log(response);
     const requestOutcome: boolean = response.data.message.loginOutcome;
     console.log(requestOutcome);
@@ -62,7 +63,7 @@ const loginAttempt = async (formData: loginAttemptFormData) => {
 const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
   const x = getTokenFromStorage().then((headerWithToken) => {
     const serverRequest = axios
-      .post("/todos/new-todo-item", formData, headerWithToken)
+      .post(BASE_URL + "/todos/new-todo-item", formData, headerWithToken)
       .then((serverResponse) => {
         return serverResponse.data;
       });
@@ -74,7 +75,11 @@ const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
 const updateEditedToDoItem = async (formData: EditItemInterface) => {
   const x = getTokenFromStorage().then((headerWithToken) => {
     const serverRequest = axios
-      .post("todos/update-edited-todo-item", formData, headerWithToken)
+      .post(
+        BASE_URL + "/todos/update-edited-todo-item",
+        formData,
+        headerWithToken
+      )
       .then((serverResponse) => {
         return serverResponse.data;
       });
@@ -86,7 +91,7 @@ const updateEditedToDoItem = async (formData: EditItemInterface) => {
 const userLoginCheck = async () => {
   const x = getTokenFromStorage().then((headerWithToken) => {
     const serverRequest = axios
-      .get("/checktokenvalidity", headerWithToken)
+      .get(BASE_URL + "/checktokenvalidity", headerWithToken)
       .then((serverResponse) => {
         return serverResponse.data;
       });

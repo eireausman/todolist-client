@@ -27,7 +27,7 @@ const NavigationTop: React.FC<NavigationTopProps> = ({
         <h1 className="topNavBarHeading">Your To Do List</h1>
         <Link to="/todos">
           <button
-            // className="topNavBarButton"
+            data-testid="link-todos"
             onClick={(e) => updateActiveMenuTab(e)}
             name="/todos"
             className={
@@ -57,6 +57,7 @@ const NavigationTop: React.FC<NavigationTopProps> = ({
         {userIsLoggedIn === true ? (
           <Link to="/logout">
             <button
+              data-testid="logout_button"
               className={
                 activeMenuTab === "/login"
                   ? "genericSiteButton activeMenuTab"
@@ -71,6 +72,7 @@ const NavigationTop: React.FC<NavigationTopProps> = ({
           <Fragment>
             <Link to="/createaccount">
               <button
+                data-testid="createaccount_button"
                 onClick={(e) => updateActiveMenuTab(e)}
                 name="/createaccount"
                 className={
@@ -85,6 +87,7 @@ const NavigationTop: React.FC<NavigationTopProps> = ({
             </Link>
             <Link to="/login">
               <button
+                data-testid="login_button"
                 onClick={(e) => updateActiveMenuTab(e)}
                 name="/login"
                 className={

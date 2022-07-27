@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getToDos } from "../modules/serverRequests";
 import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import EditToDoModal from "./EditToDoModal";
+import { getToDos } from "../modules/serverRequests";
+
 import {
   EditItemInterface,
   ToDoListsDatabaseData,
@@ -62,6 +63,7 @@ const ToDoLists: React.FC<ToDoListsProps> = ({
       {showSpinner === true && (
         <Button variant="primary" className="mb-5" disabled>
           <Spinner
+            data-testid="loading_spinner"
             as="span"
             animation="grow"
             size="sm"
@@ -78,7 +80,9 @@ const ToDoLists: React.FC<ToDoListsProps> = ({
             className="toDoCard"
             onClick={() => showEditModal(toDoItem._id)}
           >
-            <div className="cardTitle">{toDoItem.title}</div>
+            <div className="cardTitle" data-testid={toDoItem._id}>
+              {toDoItem.title}
+            </div>
             <div className="cardDetail">{toDoItem.detail}</div>
             {toDoItem.dueDate_formatted !== "1 Jan 2000" && (
               <div className="cardDate">{toDoItem.dueDate_formatted}</div>

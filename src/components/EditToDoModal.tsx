@@ -49,17 +49,19 @@ const EditToDoModal: React.FC<EditToDoModalProps> = ({
             setToDosFromDatabase(serverResponse.list_items);
             setShowSpinner(false);
           } else {
+            // return error to user: not saved due to token expiration most likely
           }
         });
-        // seteditModalBeingShown(false);
+        seteditModalBeingShown(false);
+        setShowSpinner(false);
       }
-      setShowSpinner(false);
     });
   };
 
   return (
     <div
       onClick={(e) => closeModal(e)}
+      data-testid="closeModalClickTrigger"
       className={
         editModalBeingShown === true
           ? "editModalContainer editModalContainerShow"
@@ -69,17 +71,23 @@ const EditToDoModal: React.FC<EditToDoModalProps> = ({
     >
       <div className="editModal">
         <form action="#" className="editModalForm" onSubmit={submitFormData}>
-          <input type="hidden" name="itemid" value={editItem._id!} />
+          <input
+            data-testid={"modalitemid-" + editItem._id!}
+            type="hidden"
+            name="itemid"
+            value={editItem._id! ? editItem._id : ""}
+          />
           <label>
             <p>Title</p>
 
             <input
+              data-testid="editModalTitleField"
               className="editModalInputField"
               type="text"
               id="title"
               name="title"
               minLength={3}
-              value={editItem.title}
+              value={editItem.title! ? editItem.title : ""}
               onChange={(e) => updateFormDataState(e)}
             />
           </label>
@@ -87,7 +95,7 @@ const EditToDoModal: React.FC<EditToDoModalProps> = ({
           <textarea
             className="editModalInputField"
             name="detail"
-            value={editItem.detail}
+            value={editItem.detail! ? editItem.detail : ""}
             onChange={(e) => updateFormDataState(e)}
           />
 
@@ -95,11 +103,20 @@ const EditToDoModal: React.FC<EditToDoModalProps> = ({
             className="editModalInputField"
             type="date"
             name="dueDate_forHTMLForms"
-            value={editItem.dueDate_forHTMLForms}
+            value={
+              editItem.dueDate_forHTMLForms!
+                ? editItem.dueDate_forHTMLForms
+                : ""
+            }
             onChange={(e) => updateFormDataState(e)}
           />
 
-          <button className="genericSiteButton">Save Changes</button>
+          <button
+            data-testid="editModalSaveChangesButton"
+            className="genericSiteButton"
+          >
+            Save Changes
+          </button>
           {showSpinner === true && (
             <Spinner
               as="span"

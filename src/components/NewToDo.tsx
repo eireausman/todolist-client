@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import { postNewToDoItem } from "../modules/serverRequests";
 import {
@@ -46,6 +45,7 @@ const NewToDo: React.FC = () => {
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Task Title</Form.Label>
             <Form.Control
+              data-testid="title"
               type="text"
               name="title"
               title="title (required)"
@@ -63,6 +63,7 @@ const NewToDo: React.FC = () => {
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Task Detail</Form.Label>
             <Form.Control
+              data-testid="detail"
               as="textarea"
               rows={3}
               name="detail"
@@ -76,6 +77,7 @@ const NewToDo: React.FC = () => {
           {showDueDate ? (
             <Form.Group className="mb-3">
               <Form.Control
+                data-testid="dueDate"
                 type="date"
                 name="dueDate"
                 title="dueDate"
@@ -86,6 +88,7 @@ const NewToDo: React.FC = () => {
           ) : (
             <Form.Group className="mb-3">
               <button
+                data-testid="addDueDate"
                 title="addDueDate"
                 onClick={() => setShowDueDate(!showDueDate)}
                 className="genericSiteButton"
@@ -95,16 +98,28 @@ const NewToDo: React.FC = () => {
             </Form.Group>
           )}
 
-          <button type="submit" className="genericSiteButton">
+          <button
+            type="submit"
+            data-testid="submitNewToDoButton"
+            className="genericSiteButton"
+          >
             Submit
           </button>
           {formSubmitResponse === true && (
-            <Alert variant="success" className="mb-3">
+            <Alert
+              variant="success"
+              data-testid="alert-success"
+              className="mb-3"
+            >
               Your task has been saved.
             </Alert>
           )}
           {formSubmitResponse === false && (
-            <Alert variant="danger" className="mb-3">
+            <Alert
+              variant="danger"
+              data-testid="alert-failure"
+              className="mb-3"
+            >
               An error occurred. Please try again.
             </Alert>
           )}

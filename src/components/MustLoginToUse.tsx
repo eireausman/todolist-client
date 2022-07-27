@@ -8,7 +8,7 @@ const MustLoginToUse = () => {
         <Card style={{ width: "18rem" }}>
           <Card.Body>
             <Card.Title>Please Login</Card.Title>
-            <Card.Text>
+            <Card.Text data-testid="must_be_logged_in">
               You must be logged in to use this application.
             </Card.Text>
             <Card.Link href="/login">Login</Card.Link>

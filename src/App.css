@@ -41,19 +41,19 @@ body {
   border: 0px;
   border-radius: 6px;
   margin: 2px;
-  padding: 5px;
+  padding: 10px;
   background-color: rgba(255, 0, 196, 0.857);
   color: rgb(255, 255, 255);
 }
 
 .genericSiteButton:hover {
   border: 1px solid rgba(255, 255, 255, 0.576);
-  padding: 4px;
+  padding: 9px;
 }
 
 .activeMenuTab {
   border: 1px solid white;
-  padding: 4px;
+  padding: 9px;
 }
 
 .topNavBarLoginState {
