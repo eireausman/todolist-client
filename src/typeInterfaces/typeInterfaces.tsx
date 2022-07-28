@@ -1,3 +1,9 @@
+export interface createAccountFormData {
+  [key: string]: string | undefined;
+  username?: string;
+  password?: string;
+}
+
 export interface EditItemInterface {
   [key: string]: string | number | undefined;
   _id?: number;

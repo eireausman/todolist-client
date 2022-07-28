@@ -54,10 +54,42 @@ const newToDoServerResponseFailed = {
   Outcome: false,
 };
 
+const loginAttemptFailed = {
+  message: {
+    loginOutcome: false,
+  },
+};
+
+const loginAttemptSuccess = {
+  message: {
+    loginOutcome: true,
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXIiOiIxMjM0NTY3OCJ9LCJpYXQiOjE2NTg5NjU0ODYsImV4cCI6MTY1OTA1MTg4Nn0.qz-TEtzXZ8OSLwuZ_AhwZtjLVlBL9oYgmHQfzSTIGyQ",
+  },
+};
+
+const createAccountAttemptSuccess = {
+  data: {
+    requestOutcome: true,
+    message: "Your account has been created.  Please login",
+  },
+};
+
+const createAccountAttemptFailed = {
+  data: {
+    requestOutcome: false,
+    message: "User already exists",
+  },
+};
+
 export {
   ToDoListsTestData,
   editToDoModalServerResponse,
   ToDoListsTestDataAfterModalSave,
   newToDoServerResponseSuccess,
   newToDoServerResponseFailed,
+  loginAttemptFailed,
+  loginAttemptSuccess,
+  createAccountAttemptSuccess,
+  createAccountAttemptFailed,
 };

@@ -3,32 +3,35 @@ import { render, screen } from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
+import CreateAccount from "./CreateAccount";
 import * as API from "../modules/serverRequests";
-import Login from "./Login";
+import {
+  createAccountAttemptSuccess,
+  createAccountAttemptFailed,
+} from "../assets/testdata";
 import { USERNAMEMIN, PASSWORDMIN } from "../modules/publicEnvVariables";
-import { loginAttemptFailed, loginAttemptSuccess } from "../assets/testdata";
 
 afterEach(() => {
   // cleanup on exiting
   jest.clearAllMocks();
 });
 
-describe("Login page tests", () => {
-  it("Logged out: Login form appears", () => {
+describe("Create Account page tests", () => {
+  it("Renders with login here message", () => {
     act(() => {
       render(
         <BrowserRouter>
-          <Login userIsLoggedIn={false} setuserIsLoggedIn={() => {}} />
+          <CreateAccount />
         </BrowserRouter>
       );
     });
-    expect(screen.getByTestId("login-box-header")).toBeInTheDocument();
+    expect(screen.getByText("Login here")).toBeInTheDocument();
   });
-  it("Logged out: Form data can be updated correctly", async () => {
+  it("Form data can be updated correctly", async () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <Login userIsLoggedIn={false} setuserIsLoggedIn={() => {}} />
+          <CreateAccount />
         </BrowserRouter>
       );
     });
@@ -43,15 +46,20 @@ describe("Login page tests", () => {
       (screen.getByTestId("password-input-field") as HTMLInputElement).value
     ).toBe("12345678");
   });
-  it("Logged out: Form data can be submitted - Login Fails", async () => {
+  it("Form submission: account created", async () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <Login userIsLoggedIn={false} setuserIsLoggedIn={() => {}} />
+          <CreateAccount />
         </BrowserRouter>
       );
     });
-    expect(screen.getByTestId("login-form-submitButton")).toBeInTheDocument();
+    (API.createAccountAttempt as jest.Mock) = jest.fn();
+    (API.createAccountAttempt as jest.Mock).mockResolvedValue(
+      createAccountAttemptSuccess
+    );
+    expect(screen.getByTestId("password-input-field")).toBeInTheDocument();
+    expect(screen.getByTestId("username-input-field")).toBeInTheDocument();
     userEvent.type(screen.getByTestId("username-input-field"), "12345678");
     userEvent.type(screen.getByTestId("password-input-field"), "12345678");
     expect(
@@ -60,22 +68,30 @@ describe("Login page tests", () => {
     expect(
       (screen.getByTestId("password-input-field") as HTMLInputElement).value
     ).toBe("12345678");
-    (API.loginAttempt as jest.Mock) = jest.fn();
-    (API.loginAttempt as jest.Mock).mockResolvedValue(loginAttemptFailed);
+    expect(
+      screen.getByTestId("createaccount-form-submitButton")
+    ).toBeInTheDocument();
     await act(async () => {
-      userEvent.click(screen.getByTestId("login-form-submitButton"));
+      userEvent.click(screen.getByTestId("createaccount-form-submitButton"));
     });
-    expect(screen.getByTestId("loginFailureMessage")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("accountCreationSuccessMessage")
+    ).toBeInTheDocument();
   });
-  it("Logged out: Form data can be submitted - Login Success", async () => {
+  it("Form submission: failed account creation - already exists", async () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <Login userIsLoggedIn={false} setuserIsLoggedIn={() => {}} />
+          <CreateAccount />
         </BrowserRouter>
       );
     });
-    expect(screen.getByTestId("login-form-submitButton")).toBeInTheDocument();
+    (API.createAccountAttempt as jest.Mock) = jest.fn();
+    (API.createAccountAttempt as jest.Mock).mockResolvedValue(
+      createAccountAttemptFailed
+    );
+    expect(screen.getByTestId("password-input-field")).toBeInTheDocument();
+    expect(screen.getByTestId("username-input-field")).toBeInTheDocument();
     userEvent.type(screen.getByTestId("username-input-field"), "12345678");
     userEvent.type(screen.getByTestId("password-input-field"), "12345678");
     expect(
@@ -84,18 +100,22 @@ describe("Login page tests", () => {
     expect(
       (screen.getByTestId("password-input-field") as HTMLInputElement).value
     ).toBe("12345678");
-    (API.loginAttempt as jest.Mock) = jest.fn();
-    (API.loginAttempt as jest.Mock).mockResolvedValue(loginAttemptSuccess);
+    expect(
+      screen.getByTestId("createaccount-form-submitButton")
+    ).toBeInTheDocument();
     await act(async () => {
-      userEvent.click(screen.getByTestId("login-form-submitButton"));
+      userEvent.click(screen.getByTestId("createaccount-form-submitButton"));
     });
-    expect(screen.getByTestId("loginSuccessMessage")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("accountCreationFailedMessage")
+    ).toBeInTheDocument();
   });
+
   it("Username and Password field validation in place", async () => {
     await act(async () => {
       render(
         <BrowserRouter>
-          <Login userIsLoggedIn={false} setuserIsLoggedIn={() => {}} />
+          <CreateAccount />
         </BrowserRouter>
       );
     });

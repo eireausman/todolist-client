@@ -3,13 +3,12 @@ import Axios from "axios";
 import { Form } from "react-bootstrap";
 import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
-import { userLoginCheck } from "../modules/serverRequests";
-
-interface FormData {
-  [key: string]: string | undefined;
-  username?: string;
-  password?: string;
-}
+import {
+  userLoginCheck,
+  createAccountAttempt,
+} from "../modules/serverRequests";
+import { USERNAMEMIN, PASSWORDMIN } from "../modules/publicEnvVariables";
+import { createAccountFormData } from "../typeInterfaces/typeInterfaces";
 
 interface serverResponse {
   requestOutcome?: boolean;
@@ -17,7 +16,7 @@ interface serverResponse {
 }
 
 const CreateAccount: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<createAccountFormData>({
     username: "",
     password: "",
   });
@@ -32,7 +31,7 @@ const CreateAccount: React.FC = () => {
   useEffect(() => {
     const checkLoginState = async () => {
       await userLoginCheck().then((serverResponse) => {
-        if (serverResponse.userLoggedIn === true) {
+        if (serverResponse.data.userLoggedIn === true) {
           navigate("/todos?e=" + encodeURIComponent("already logged in"));
         }
       });
@@ -41,7 +40,7 @@ const CreateAccount: React.FC = () => {
   }, [navigate]);
 
   const updateFormDataState = (e: React.FormEvent<EventTarget>) => {
-    const formDataCopy: FormData = { ...formData };
+    const formDataCopy: createAccountFormData = { ...formData };
     const target = e.target as HTMLInputElement;
 
     const fieldName =
@@ -53,10 +52,8 @@ const CreateAccount: React.FC = () => {
 
   const submitFormData = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
-    Axios.post("/createaccount", formData).then((response) => {
-      console.log(response.status);
-      console.log(response.data);
-      setFormSubmitResponse(response.data);
+    createAccountAttempt(formData).then((serverResponse) => {
+      setFormSubmitResponse(serverResponse.data);
       setshowResponseMessage(true);
     });
   };
@@ -72,8 +69,9 @@ const CreateAccount: React.FC = () => {
             </Form.Label>
             <Form.Control
               required
+              data-testid="username-input-field"
               name="username"
-              minLength={3}
+              minLength={USERNAMEMIN}
               onChange={(e) => updateFormDataState(e)}
               type="text"
               placeholder="Username (required)"
@@ -84,21 +82,33 @@ const CreateAccount: React.FC = () => {
             <Form.Label visuallyHidden>Password</Form.Label>
             <Form.Control
               required
+              data-testid="password-input-field"
               name="password"
-              minLength={8}
+              minLength={PASSWORDMIN}
               onChange={(e) => updateFormDataState(e)}
               type="password"
               placeholder="Password (required)"
             />
           </Form.Group>
-          <button type="submit" className="genericSiteButton">
+          <button
+            data-testid="createaccount-form-submitButton"
+            type="submit"
+            className="genericSiteButton"
+          >
             Submit
           </button>
           {showResponseMessage && !formSubmitResponse.requestOutcome && (
-            <Alert variant="danger">{formSubmitResponse.message}</Alert>
+            <Alert data-testid="accountCreationFailedMessage" variant="danger">
+              {formSubmitResponse.message}
+            </Alert>
           )}
           {showResponseMessage && formSubmitResponse.requestOutcome && (
-            <Alert variant="success">{formSubmitResponse.message}</Alert>
+            <Alert
+              data-testid="accountCreationSuccessMessage"
+              variant="success"
+            >
+              {formSubmitResponse.message}
+            </Alert>
           )}
           <Form.Group className="mb-3">
             Already have an account? <Link to="/login">Login here</Link>.

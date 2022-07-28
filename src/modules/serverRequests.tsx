@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   postNewToDoItemFormData,
   EditItemInterface,
+  createAccountFormData,
 } from "../typeInterfaces/typeInterfaces";
 import { BASE_URL } from "../modules/publicEnvVariables";
 
@@ -18,6 +19,16 @@ const getTokenFromStorage = async () => {
     };
     return requestConfig;
   }
+};
+
+const createAccountAttempt = async (formData: createAccountFormData) => {
+  const headerWithToken = await getTokenFromStorage();
+  const serverResponse = await axios.post(
+    BASE_URL + "/createaccount",
+    formData,
+    headerWithToken
+  );
+  return await serverResponse;
 };
 
 const getToDos = async () => {
@@ -40,18 +51,14 @@ interface loginAttemptFormData {
 
 const loginAttempt = async (formData: loginAttemptFormData) => {
   const x = axios.post(BASE_URL + "/login", formData).then((response) => {
-    console.log(response);
     const requestOutcome: boolean = response.data.message.loginOutcome;
-    console.log(requestOutcome);
     if (requestOutcome === true) {
       try {
         localStorage.setItem(
           "token",
           JSON.stringify(response.data.message.token)
         );
-        console.log(response.data);
       } catch (e) {
-        console.log(e);
         return;
       }
     }
@@ -89,15 +96,12 @@ const updateEditedToDoItem = async (formData: EditItemInterface) => {
 };
 
 const userLoginCheck = async () => {
-  const x = getTokenFromStorage().then((headerWithToken) => {
-    const serverRequest = axios
-      .get(BASE_URL + "/checktokenvalidity", headerWithToken)
-      .then((serverResponse) => {
-        return serverResponse.data;
-      });
-    return serverRequest;
-  });
-  return await x;
+  const headerWithToken = await getTokenFromStorage();
+  const serverResponse = await axios.get(
+    BASE_URL + "/checktokenvalidity",
+    headerWithToken
+  );
+  return await serverResponse;
 };
 
 export {
@@ -106,4 +110,5 @@ export {
   loginAttempt,
   postNewToDoItem,
   updateEditedToDoItem,
+  createAccountAttempt,
 };

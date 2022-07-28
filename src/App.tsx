@@ -18,7 +18,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     userLoginCheck().then((serverResponse) => {
-      if (serverResponse.userLoggedIn === true) {
+      if (serverResponse.data.userLoggedIn === true) {
         setuserIsLoggedIn(true);
       } else {
         setuserIsLoggedIn(false);

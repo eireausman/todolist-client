@@ -4,6 +4,7 @@ import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
 import { userLoginCheck, loginAttempt } from "../modules/serverRequests";
+import { USERNAMEMIN, PASSWORDMIN } from "../modules/publicEnvVariables";
 
 interface FormData {
   [key: string]: string | undefined;
@@ -39,7 +40,7 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
 
   useEffect(() => {
     userLoginCheck().then((serverResponse) => {
-      if (serverResponse.userLoggedIn === true) {
+      if (serverResponse.data.userLoggedIn === true) {
         navigate("/todos?e=" + encodeURIComponent("already logged in"));
       }
     });
@@ -59,7 +60,6 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
   const submitFormData = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     loginAttempt(formData).then((serverResponse) => {
-      console.log(serverResponse);
       setFormSubmitResponse(serverResponse);
       setshowResponseMessage(true);
 
@@ -75,15 +75,18 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
     <div className="appContainer">
       <section className="genericFormContainer">
         <Form onSubmit={submitFormData}>
-          <Form.Group className="mb-3">LOGIN</Form.Group>
+          <Form.Group className="mb-3" data-testid="login-box-header">
+            LOGIN
+          </Form.Group>
           <Form.Group className="mb-3">
             Test Account Username and Password: 12345678
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label visuallyHidden>Username</Form.Label>
             <Form.Control
+              data-testid="username-input-field"
               required
-              minLength={3}
+              minLength={USERNAMEMIN}
               name="username"
               onChange={(e) => updateFormDataState(e)}
               type="text"
@@ -94,25 +97,38 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label visuallyHidden>Password</Form.Label>
             <Form.Control
+              data-testid="password-input-field"
               required
               name="password"
-              minLength={8}
+              minLength={PASSWORDMIN}
               onChange={(e) => updateFormDataState(e)}
               type="password"
               placeholder="Password (required)"
             />
           </Form.Group>
-          <button type="submit" className="genericSiteButton">
+          <button
+            data-testid="login-form-submitButton"
+            type="submit"
+            className="genericSiteButton"
+          >
             Submit
           </button>
 
           {showResponseMessage && !formSubmitResponse.message?.loginOutcome && (
-            <Alert variant="danger" className="mb-3">
+            <Alert
+              data-testid="loginFailureMessage"
+              variant="danger"
+              className="mb-3"
+            >
               Error with credentials. Please try again.
             </Alert>
           )}
           {showResponseMessage && formSubmitResponse.message?.loginOutcome && (
-            <Alert variant="success" className="mb-3">
+            <Alert
+              data-testid="loginSuccessMessage"
+              variant="success"
+              className="mb-3"
+            >
               Success - please wait while you are redirected...
               <Spinner animation="border" variant="primary" />
             </Alert>
