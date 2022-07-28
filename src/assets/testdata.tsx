@@ -69,17 +69,13 @@ const loginAttemptSuccess = {
 };
 
 const createAccountAttemptSuccess = {
-  data: {
-    requestOutcome: true,
-    message: "Your account has been created.  Please login",
-  },
+  requestOutcome: true,
+  message: "Your account has been created.  Please login",
 };
 
 const createAccountAttemptFailed = {
-  data: {
-    requestOutcome: false,
-    message: "User already exists",
-  },
+  requestOutcome: false,
+  message: "User already exists",
 };
 
 export {

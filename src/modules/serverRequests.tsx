@@ -3,6 +3,7 @@ import {
   postNewToDoItemFormData,
   EditItemInterface,
   createAccountFormData,
+  LoginAttemptFormData,
 } from "../typeInterfaces/typeInterfaces";
 import { BASE_URL } from "../modules/publicEnvVariables";
 
@@ -14,6 +15,7 @@ const getTokenFromStorage = async () => {
     };
     return requestConfig;
   } else {
+    // should replace with something that avoids making a server call downstream
     const requestConfig: object = {
       headers: { Authorization: `Bearer noToken` },
     };
@@ -28,43 +30,30 @@ const createAccountAttempt = async (formData: createAccountFormData) => {
     formData,
     headerWithToken
   );
-  return await serverResponse;
+  return await serverResponse.data;
 };
 
 const getToDos = async () => {
-  const x = getTokenFromStorage().then((headerWithToken) => {
-    const serverRequest = axios
-      .get(BASE_URL + "/todos", headerWithToken)
-      .then((serverResponse) => {
-        return serverResponse.data;
-      });
-    return serverRequest;
-  });
-  return await x;
+  const headerWithToken = await getTokenFromStorage();
+  const serverResponse = await axios.get(BASE_URL + "/todos", headerWithToken);
+  return await serverResponse.data;
 };
 
-interface loginAttemptFormData {
-  [key: string]: string | undefined;
-  username?: string;
-  password?: string;
-}
-
-const loginAttempt = async (formData: loginAttemptFormData) => {
-  const x = axios.post(BASE_URL + "/login", formData).then((response) => {
-    const requestOutcome: boolean = response.data.message.loginOutcome;
-    if (requestOutcome === true) {
-      try {
-        localStorage.setItem(
-          "token",
-          JSON.stringify(response.data.message.token)
-        );
-      } catch (e) {
-        return;
-      }
+const loginAttempt = async (formData: LoginAttemptFormData) => {
+  const serverResponse = await axios.post(BASE_URL + "/login", formData);
+  const requestOutcome: boolean = await serverResponse.data.message
+    .loginOutcome;
+  if (requestOutcome === true) {
+    try {
+      localStorage.setItem(
+        "token",
+        JSON.stringify(serverResponse.data.message.token)
+      );
+    } catch (e) {
+      return;
     }
-    return response.data;
-  });
-  return await x;
+  }
+  return await serverResponse.data;
 };
 
 const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
@@ -80,19 +69,13 @@ const postNewToDoItem = async (formData: postNewToDoItemFormData) => {
 };
 
 const updateEditedToDoItem = async (formData: EditItemInterface) => {
-  const x = getTokenFromStorage().then((headerWithToken) => {
-    const serverRequest = axios
-      .post(
-        BASE_URL + "/todos/update-edited-todo-item",
-        formData,
-        headerWithToken
-      )
-      .then((serverResponse) => {
-        return serverResponse.data;
-      });
-    return serverRequest;
-  });
-  return await x;
+  const headerWithToken = await getTokenFromStorage();
+  const serverResponse = await axios.post(
+    BASE_URL + "/todos/update-edited-todo-item",
+    formData,
+    headerWithToken
+  );
+  return await serverResponse.data;
 };
 
 const userLoginCheck = async () => {
@@ -101,7 +84,7 @@ const userLoginCheck = async () => {
     BASE_URL + "/checktokenvalidity",
     headerWithToken
   );
-  return await serverResponse;
+  return await serverResponse.data;
 };
 
 export {

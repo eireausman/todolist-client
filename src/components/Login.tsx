@@ -5,12 +5,7 @@ import Spinner from "react-bootstrap/Spinner";
 import { useNavigate } from "react-router-dom";
 import { userLoginCheck, loginAttempt } from "../modules/serverRequests";
 import { USERNAMEMIN, PASSWORDMIN } from "../modules/publicEnvVariables";
-
-interface FormData {
-  [key: string]: string | undefined;
-  username?: string;
-  password?: string;
-}
+import { LoginAttemptFormData } from "../typeInterfaces/typeInterfaces";
 
 interface serverResponse {
   message?: {
@@ -29,7 +24,7 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
   const [formSubmitResponse, setFormSubmitResponse] = useState<serverResponse>(
     {}
   );
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<LoginAttemptFormData>({
     username: "",
     password: "",
   });
@@ -40,14 +35,14 @@ const Login: React.FC<LogInProps> = ({ userIsLoggedIn, setuserIsLoggedIn }) => {
 
   useEffect(() => {
     userLoginCheck().then((serverResponse) => {
-      if (serverResponse.data.userLoggedIn === true) {
+      if (serverResponse.userLoggedIn === true) {
         navigate("/todos?e=" + encodeURIComponent("already logged in"));
       }
     });
   }, [navigate]);
 
   const updateFormDataState = (e: React.FormEvent<EventTarget>) => {
-    const formDataCopy: FormData = { ...formData };
+    const formDataCopy: LoginAttemptFormData = { ...formData };
     const target = e.target as HTMLInputElement;
 
     const fieldName =

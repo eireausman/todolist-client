@@ -31,7 +31,7 @@ const CreateAccount: React.FC = () => {
   useEffect(() => {
     const checkLoginState = async () => {
       await userLoginCheck().then((serverResponse) => {
-        if (serverResponse.data.userLoggedIn === true) {
+        if (serverResponse.userLoggedIn === true) {
           navigate("/todos?e=" + encodeURIComponent("already logged in"));
         }
       });
@@ -53,7 +53,7 @@ const CreateAccount: React.FC = () => {
   const submitFormData = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
     createAccountAttempt(formData).then((serverResponse) => {
-      setFormSubmitResponse(serverResponse.data);
+      setFormSubmitResponse(serverResponse);
       setshowResponseMessage(true);
     });
   };

@@ -14,14 +14,13 @@ export interface EditItemInterface {
   dueDate_formatted?: string;
 }
 
-export interface NewToDoFormData {
-  [key: string]: string | number | undefined;
-  dueDate?: number;
-  title?: string;
-  detail?: string;
+export interface LoginAttemptFormData {
+  [key: string]: string | undefined;
+  username?: string;
+  password?: string;
 }
 
-export interface postNewToDoItemFormData {
+export interface NewToDoFormData {
   [key: string]: string | number | undefined;
   dueDate?: number;
   title?: string;
@@ -30,6 +29,13 @@ export interface postNewToDoItemFormData {
 
 export interface NewToDoFormSubmissionServerResponse {
   Outcome?: boolean;
+}
+
+export interface postNewToDoItemFormData {
+  [key: string]: string | number | undefined;
+  dueDate?: number;
+  title?: string;
+  detail?: string;
 }
 
 export interface ToDoListsDatabaseData {
